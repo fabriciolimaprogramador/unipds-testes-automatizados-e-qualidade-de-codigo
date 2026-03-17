@@ -2,7 +2,7 @@ package br.dev.fabricio.calculadora;
 
 import org.junit.jupiter.api.*;
 
-@TestMethodOrder(MethodOrderer.MethodName.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AnotacoesJUnitTest {
 
 //  @BeforeAll
@@ -31,16 +31,19 @@ public class AnotacoesJUnitTest {
 
 
   @Test
+  @Order(3)
   void aMeuTeste(){
     System.out.println("Executou teste A");
   }
 
   @Test
+  @Order(1)
   void bMeuTeste(){
     System.out.println("Executou teste B");
   }
 
   @Test
+  @Order(2)
   void cMeuTeste(){
     System.out.println("Executou teste C");
   }
