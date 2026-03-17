@@ -1,8 +1,11 @@
 package br.dev.fabricio.calculadora;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestMethodOrder(MethodOrderer.DisplayName.class)
 public class AnotacoesJUnitTest {
 
 //  @BeforeAll
@@ -29,25 +32,23 @@ public class AnotacoesJUnitTest {
 //  }
 
 
-
   @Test
-  @Order(3)
-  void aMeuTeste(){
+  @DisplayName("Teste do metodo a")
+  void aMeuTeste() {
     System.out.println("Executou teste A");
   }
 
   @Test
-  @Order(1)
-  void bMeuTeste(){
+  @DisplayName("Verifica XYZ")
+  void bMeuTeste() {
     System.out.println("Executou teste B");
   }
 
   @Test
-  @Order(2)
-  void cMeuTeste(){
+  @DisplayName("Garante que YZZ")
+  void cMeuTeste() {
     System.out.println("Executou teste C");
   }
-
 
 
 }
