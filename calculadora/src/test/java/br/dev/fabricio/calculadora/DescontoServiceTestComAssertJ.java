@@ -1,11 +1,11 @@
 package br.dev.fabricio.calculadora;
 
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-class DescontoServiceTest {
+class DescontoServiceTestComAssertJ {
 
   private final DescontoService descontoService = new DescontoService();
 
@@ -13,9 +13,10 @@ class DescontoServiceTest {
   void deveAplicarDescontoQuandoValorForMaiorQue100() {
     BigDecimal total = new BigDecimal("150.00");
 
-    BigDecimal resultado = descontoService.aplicarDesconto(total);
+    BigDecimal valorComDesconto = descontoService.aplicarDesconto(total);
 
-    Assertions.assertEquals(resultado, new BigDecimal("135.000"));
+    Assertions.assertThat(valorComDesconto).isEqualByComparingTo("135.00");
+
 
   }
 
@@ -23,9 +24,9 @@ class DescontoServiceTest {
   void naoDeveAplicarDescontoQuandoValorForMaiorQue100() {
     BigDecimal total = new BigDecimal("100.00");
 
-    BigDecimal resultado = descontoService.aplicarDesconto(total);
+    BigDecimal valorSemDesconto = descontoService.aplicarDesconto(total);
 
-    Assertions.assertEquals(resultado, total);
+    Assertions.assertThat(valorSemDesconto).isEqualByComparingTo(total);
 
 
   }
