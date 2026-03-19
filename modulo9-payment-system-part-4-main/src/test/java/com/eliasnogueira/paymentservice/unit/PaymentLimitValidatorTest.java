@@ -2,19 +2,19 @@ package com.eliasnogueira.paymentservice.unit;
 
 import com.eliasnogueira.paymentservice.exceptions.PaymentLimitException;
 import com.eliasnogueira.paymentservice.validator.PaymentLimitValidator;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class PaymentLimitValidatorTest {
 
   @Test
-  void shouldBeWithinLimit(){
+  void shouldBeWithinLimit() {
 
-    BigDecimal amount = new BigDecimal("500.00");
+    BigDecimal amount = new BigDecimal("1999.99");
 
     boolean isWithinLimit = PaymentLimitValidator.isWithinLimit(amount);
 
@@ -23,20 +23,29 @@ public class PaymentLimitValidatorTest {
   }
 
   @Test
-  void shouldNotAcceptNullAmount(){
+  void shouldNotAcceptAmountGreaterThanLimit() {
+    boolean isWithinLimit = PaymentLimitValidator.isWithinLimit(new BigDecimal("2000.01"));
+
+    assertThat(isWithinLimit).isFalse();
+  }
+
+  @Test
+  void shouldNotAcceptAmountEqualThanLimit() {
+    boolean isWithinLimit = PaymentLimitValidator.isWithinLimit(new BigDecimal("2000.00"));
+
+    assertThat(isWithinLimit).isTrue();
+  }
+
+  @Test
+  void shouldNotAcceptNullAmount() {
     boolean isWithinLimit = PaymentLimitValidator.isWithinLimit(null);
     assertThat(isWithinLimit).isFalse();
   }
 
-  @Test
-  void shouldNotAcceptAmountGreaterThanLimit(){
-    boolean isWithinLimit = PaymentLimitValidator.isWithinLimit(new BigDecimal("3000"));
 
-    assertThat(isWithinLimit).isFalse();
-  }
 
   @Test
-  void shouldNotAcceptZeroAmount(){
+  void shouldNotAcceptZeroAmount() {
 
     assertThatThrownBy(() -> PaymentLimitValidator.isWithinLimit(BigDecimal.ZERO))
             .isInstanceOf(PaymentLimitException.class)
@@ -45,14 +54,13 @@ public class PaymentLimitValidatorTest {
   }
 
   @Test
-  void shouldNotAcceptNegativeAmount(){
+  void shouldNotAcceptNegativeAmount() {
 
     assertThatThrownBy(() -> PaymentLimitValidator.isWithinLimit(new BigDecimal("-5.00")))
             .isInstanceOf(PaymentLimitException.class)
             .hasMessage("Amount must be greater than zero");
 
   }
-
 
 
 }
