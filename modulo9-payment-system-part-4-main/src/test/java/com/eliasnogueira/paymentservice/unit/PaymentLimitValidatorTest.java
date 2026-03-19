@@ -21,4 +21,10 @@ public class PaymentLimitValidatorTest {
 
   }
 
+  @Test
+  void shouldNotAcceptNullAmount(){
+    boolean isWithinLimit = PaymentLimitValidator.isWithinLimit(null);
+    assertThat(isWithinLimit).isFalse();
+  }
+
 }
