@@ -6,7 +6,6 @@ import com.eliasnogueira.paymentservice.model.enums.PaymentSource;
 import com.eliasnogueira.paymentservice.model.enums.PaymentStatus;
 import com.eliasnogueira.paymentservice.repository.PaymentRepository;
 import com.eliasnogueira.paymentservice.service.PaymentService;
-import com.eliasnogueira.paymentservice.validator.PaymentLimitValidator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,17 +58,18 @@ class PaymentServiceTest {
   }
 
   @Test
-  void valorUltrapassaLimiteDiario(){
+  @DisplayName("Should thrown an exception when the daily limit exceed")
+  void shouldThrownExceptionWhenAmountExceedDailyLimit() {
 
-    BigDecimal valor = new BigDecimal("2000.01");
+    BigDecimal valor = new BigDecimal("8000.00");
 
     when(paymentRepository.sumPaymentsByPayerIdAndDate(any(), any(), any()))
             .thenReturn(valor);
 
     PaymentRequest paymentRequest = PaymentRequest.builder()
             .payerId(UUID.randomUUID())
-            .paymentSource(PaymentSource.PIX)
-            .amount(valor)
+            .paymentSource(PaymentSource.CREDIT_CARD)
+            .amount(BigDecimal.valueOf(2100.00))
             .build();
 
 
@@ -80,7 +80,8 @@ class PaymentServiceTest {
   }
 
   @Test
-  void valorComoZero(){
+  @DisplayName("Should thrown an exception the amount is zero")
+  void shouldThrownExceptionWhenAmountIsZero() {
 
     BigDecimal valor = new BigDecimal("0.00");
 
@@ -89,19 +90,20 @@ class PaymentServiceTest {
 
     PaymentRequest paymentRequest = PaymentRequest.builder()
             .payerId(UUID.randomUUID())
-            .paymentSource(PaymentSource.PIX)
+            .paymentSource(PaymentSource.CREDIT_CARD)
             .amount(valor)
             .build();
 
 
     assertThatThrownBy(() -> paymentService.createPayment(paymentRequest))
             .isInstanceOf(PaymentLimitException.class)
-            .hasMessageContaining("Amount must be greater than zero");
+            .hasMessage("Amount must be greater than zero");
 
   }
 
   @Test
-  void valorNegativo(){
+  @DisplayName("Should thrown an exception the amount is negative")
+  void shouldThrownExceptionWhenAmountIsNegative() {
 
     BigDecimal valor = new BigDecimal("-1.00");
 
@@ -110,14 +112,14 @@ class PaymentServiceTest {
 
     PaymentRequest paymentRequest = PaymentRequest.builder()
             .payerId(UUID.randomUUID())
-            .paymentSource(PaymentSource.PIX)
+            .paymentSource(PaymentSource.CREDIT_CARD)
             .amount(valor)
             .build();
 
 
     assertThatThrownBy(() -> paymentService.createPayment(paymentRequest))
             .isInstanceOf(PaymentLimitException.class)
-            .hasMessageContaining("Amount must be greater than zero");
+            .hasMessage("Amount must be greater than zero");
 
   }
 
